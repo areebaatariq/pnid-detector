@@ -9,6 +9,8 @@ train/
 *.pth
 *.onnx
 
+# Allow only best.pt
+!best.pt
 # Datasets
 NEW_DATASET/
 data/
