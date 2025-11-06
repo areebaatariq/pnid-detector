@@ -11,7 +11,8 @@ import os
 app = FastAPI()
 
 # Load YOLO model
-model = YOLO("runs/train/PID_YOLOv8/weights/best.pt")
+model = YOLO("best.pt")
+
 
 # Class counters and colors
 class_counters = defaultdict(int)
