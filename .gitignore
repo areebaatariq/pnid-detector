@@ -1,4 +1,26 @@
-*.t7
+# Python cache
+__pycache__/
+*.pyc
+
+# YOLO & training artifacts
+runs/
+train/
+*.pt
+*.pth
+*.onnx
+
+# Datasets
+NEW_DATASET/
+data/
+valid/images/
+test/images/
+
+# Logs / temp
+*.log
 *.zip
-*.t7
-*.zip
+*.tar
+*.gz
+
+# Virtual environments
+venv/
+.env/
