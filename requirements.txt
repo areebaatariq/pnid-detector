@@ -1,13 +1,9 @@
-# Core API dependencies
 fastapi==0.101.1
 uvicorn==0.38.0
 python-multipart==0.0.6
-
-# YOLO and image processing
-ultralytics==8.3.225
-opencv-python-headless==4.12.0.88  # Using headless version for server deployment
-numpy==2.2.6
-
-# PyTorch dependencies (required by ultralytics)
-torch==2.7.1+cu118
-torchvision==0.22.1+cu118
+pillow==10.4.0
+torch==2.5.1
+torchvision==0.20.1
+ultralytics==8.3.25
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
