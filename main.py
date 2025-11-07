@@ -224,7 +224,10 @@ app = FastAPI(title="P&ID Detection")
 # ✅ Allow frontend (CORS fix)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or ["https://hensis.intellico.works"] for security
+    allow_origins=[
+        "http://localhost:8000",
+        "https://hensis.intellico.works"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
