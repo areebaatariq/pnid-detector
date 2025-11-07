@@ -226,7 +226,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:8000",
-        "https://hensis.intellico.works"
+        "https://hensis.intellico.works",
+        "https://hensis-pnid-dev.intellico.works"  # 👈 ye line zaroor add karo
     ],
     allow_credentials=True,
     allow_methods=["*"],
