@@ -221,13 +221,16 @@ import json
 
 app = FastAPI(title="P&ID Detection")
 
-# ✅ Allow frontend (CORS fix)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:8000",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
         "https://hensis.intellico.works",
-        "https://hensis-pnid-dev.intellico.works"  # 👈 ye line zaroor add karo
+        "https://hensis-pnid-dev.intellico.works",
+        "https://hensis-nextjs.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
