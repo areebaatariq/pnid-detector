@@ -57,6 +57,8 @@
 
 #     # Return the image directly (Swagger gives download option)
 #     return FileResponse(output_path, media_type="image/png", filename="detections.png")
+# //////////////////////////////////////////////////////////////////////////////
+
 
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import HTMLResponse
@@ -83,8 +85,10 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 class_colors = {}
 class_counters = defaultdict(int)
 
-def get_random_color():
-    return [random.randint(0, 255) for _ in range(3)]
+def get_dark_color():
+    # RGB values from 0 to 150 for darker shades
+    return [random.randint(0, 150) for _ in range(3)]
+
 
 def process_image(image_bytes):
     class_counters.clear()
@@ -103,7 +107,7 @@ def process_image(image_bytes):
         x1, y1, x2, y2 = map(int, box.xyxy[0])
 
         if class_name not in class_colors:
-            class_colors[class_name] = get_random_color()
+            class_colors[class_name] = get_dark_color() 
         color = class_colors[class_name]
 
         obj_id = f"{class_name}-{class_counters[class_name]:02d}"
@@ -174,7 +178,7 @@ async def detect(file: UploadFile = File(...)):
                     box.style.top = (d.bbox[1] * scaleY) + 'px';
                     box.style.width = ((d.bbox[2]-d.bbox[0]) * scaleX) + 'px';
                     box.style.height = ((d.bbox[3]-d.bbox[1]) * scaleY) + 'px';
-                    box.style.border = '2px solid rgb(' + d.color[0] + ',' + d.color[1] + ',' + d.color[2] + ')';
+                    box.style.border = '4px solid rgb(' + d.color[0] + ',' + d.color[1] + ',' + d.color[2] + ')';
                     box.style.cursor = 'pointer';
                     box.title = d.id;
                     box.onmouseover = () => {{
