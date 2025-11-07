@@ -11,7 +11,7 @@ pip install -r requirements.txt
 
 2. Run the server:
 ```bash
-uvicorn api:app --host 0.0.0.0 --port 8000 --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ## Usage
