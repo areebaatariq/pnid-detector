@@ -9,8 +9,9 @@ train/
 *.pth
 *.onnx
 
-# Allow only best.pt
-!best.pt
+# Static folder (generated images)
+static/
+
 # Datasets
 NEW_DATASET/
 data/
@@ -26,3 +27,7 @@ test/images/
 # Virtual environments
 venv/
 .env/
+
+# IDE
+.vscode/
+.idea/
