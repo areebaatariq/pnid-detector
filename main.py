@@ -1107,6 +1107,7 @@ def process_image(image_bytes: bytes) -> Tuple[str, List[Dict], List[LineSegment
 
 # API Endpoints
 app.mount("/static", StaticFiles(directory=Config.UPLOAD_FOLDER), name="static")
+app.mount("/samples", StaticFiles(directory="samples"), name="samples")
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
@@ -1143,6 +1144,18 @@ async def home():
             .tech-specs h3 { color: #2c3e50; margin-bottom: 15px; }
             .tech-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
             .tech-item { color: #34495e; padding: 5px 0; }
+            .sample-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 30px; margin-bottom: 30px; color: white; }
+            .sample-section h3 { margin-bottom: 20px; font-size: 1.5rem; }
+            .sample-content { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+            .sample-preview { max-width: 300px; border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+            .sample-info { flex: 1; min-width: 250px; }
+            .sample-info p { margin-bottom: 15px; opacity: 0.95; line-height: 1.6; }
+            .sample-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+            .btn-sample { padding: 12px 25px; border-radius: 25px; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; font-weight: 600; }
+            .btn-download { background: white; color: #667eea; border: none; }
+            .btn-download:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,255,255,0.4); }
+            .btn-try { background: rgba(255,255,255,0.2); color: white; border: 2px solid white; }
+            .btn-try:hover { background: white; color: #667eea; }
         </style>
     </head>
     <body>
@@ -1152,8 +1165,22 @@ async def home():
                 <p>Advanced symbol detection and intelligent path highlighting for Piping & Instrumentation Diagrams</p>
             </div>
             
+            <div class="sample-section">
+                <h3>🧪 Try with Sample Image</h3>
+                <div class="sample-content">
+                    <img src="/samples/sample_pnid.png" alt="Sample P&ID Diagram" class="sample-preview">
+                    <div class="sample-info">
+                        <p>Don't have a P&ID image? No problem! Download our sample diagram to test the detection system. This sample includes various symbols like valves, pumps, tanks, and connecting lines.</p>
+                        <div class="sample-buttons">
+                            <a href="/samples/sample_pnid.png" download="sample_pnid.png" class="btn-sample btn-download">⬇️ Download Sample</a>
+                            <button onclick="tryWithSample()" class="btn-sample btn-try">🚀 Try with Sample</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="upload-section">
-                <form action="/detect" enctype="multipart/form-data" method="post">
+                <form id="upload-form" action="/detect" enctype="multipart/form-data" method="post">
                     <div class="upload-area" onclick="document.getElementById('file-input').click()">
                         <div class="upload-icon">📁</div>
                         <div class="upload-text">Click to upload your P&ID image</div>
@@ -1212,6 +1239,50 @@ async def home():
                     uploadText.style.color = '#27ae60';
                 }
             });
+
+            // Try with sample image
+            async function tryWithSample() {
+                try {
+                    // Show loading state
+                    const btn = document.querySelector('.btn-try');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '⏳ Loading...';
+                    btn.disabled = true;
+
+                    // Fetch the sample image
+                    const response = await fetch('/samples/sample_pnid.png');
+                    const blob = await response.blob();
+                    
+                    // Create a File object from the blob
+                    const file = new File([blob], 'sample_pnid.png', { type: 'image/png' });
+                    
+                    // Create FormData and submit
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    
+                    // Submit to detect endpoint
+                    const detectResponse = await fetch('/detect', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (detectResponse.ok) {
+                        // Replace the page content with the detection result
+                        const html = await detectResponse.text();
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    } else {
+                        throw new Error('Detection failed');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to process sample image. Please try again.');
+                    const btn = document.querySelector('.btn-try');
+                    btn.innerHTML = '🚀 Try with Sample';
+                    btn.disabled = false;
+                }
+            }
         </script>
     </body>
     </html>
